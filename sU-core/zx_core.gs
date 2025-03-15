@@ -63,7 +63,7 @@ int SearchForTrain(zxSignal sig1, int train_id, int multiplicator);
 void SendMessagesToClients(Soup data, string type);
 void SendMessageToServer(Soup data, string type);
 
-void UpdateSignState(zxSignal zxSign, int reason, int priority)
+void UpdateSignState(zxSignal zxSign, int reason, int priority, Train train)
 	{
 	zxSign.UpdateState(reason,priority);
 
@@ -71,7 +71,7 @@ void UpdateSignState(zxSignal zxSign, int reason, int priority)
 		{
 		int i;
 		for(i=0;i<zxExtra.size();i++)
-			zxExtra[i].UpdateSignalState(zxSign, reason, priority);
+			zxExtra[i].UpdateSignalState(zxSign, reason, priority, train);
 		}
 
 	}
@@ -131,7 +131,7 @@ void SignalControlHandler(Message msg)//приём заданий на открытость-закрытость с
 					if(tmpId and (TMP = cast<zxSignal>(Router.GetGameObject(tmpId))))
 						{
 						TMP.barrier_closed = false;
-						UpdateSignState(TMP,0,-1);
+						UpdateSignState(TMP,0,-1, null);
 						}
 					}
 				}
@@ -155,7 +155,7 @@ void SignalControlHandler(Message msg)//приём заданий на открытость-закрытость с
 					if(tmpId and (TMP = cast<zxSignal>(Router.GetGameObject(tmpId))))
 						{
 						TMP.barrier_closed = true;
-						UpdateSignState(TMP,0,-1);
+						UpdateSignState(TMP,0,-1, null);
 						}
 					}
 				}
@@ -211,7 +211,7 @@ void SignalControlHandler(Message msg)//приём заданий на открытость-закрытость с
 
 
 	if(update_signal)
-		UpdateSignState(curr_sign,0,-1);
+		UpdateSignState(curr_sign,0,-1, null);
 
 	}
 
@@ -580,7 +580,7 @@ void RemoveTrain(Message msg)
 			{
 			int number = train_con.signal[i];
 			(cast<zxSignalLink>(Signals.DBSE[number].Object)).sign.RemoveTrainId(train_id);
-			UpdateSignState( (cast<zxSignalLink>(Signals.DBSE[number].Object)).sign,5,-1);
+			UpdateSignState( (cast<zxSignalLink>(Signals.DBSE[number].Object)).sign,5,-1, null);
 			}
 
 		train_con.signal[0, ] = null;
@@ -623,7 +623,7 @@ void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int si
 				GameObjectID train_id1 = entered_sign.TC_id[i];
 				int train_nmb1=train_arr.Find( Router.GetGameObject(train_id1).GetId());
 
-				UpdateSignState(entered_sign,5,-1);
+				UpdateSignState(entered_sign,5,-1, null);
 
 				entered_sign.RemoveTrainId(train_id1);
 				
@@ -642,7 +642,7 @@ void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int si
 			train_con.signal[sign_numb,sign_numb+1]=null;
 			train_con.state[sign_numb,sign_numb+1]=null;
 
-			UpdateSignState( entered_sign,5,-1);
+			UpdateSignState( entered_sign,5,-1, null);
 
 
 			if(train_con.signal.size()==0 and train_con.speed_object.size()==0)
@@ -700,7 +700,7 @@ void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int si
 
 		//	Interface.Print("train "+train_arr.DBSE[train_nmb].a+" left from "+entered_sign.GetName());
 
-			UpdateSignState( entered_sign,5,-1);
+			UpdateSignState( entered_sign,5,-1, null);
 
 			if(train_con.signal.size()==0 and train_con.speed_object.size()==0)
 				{
@@ -1356,12 +1356,13 @@ thread void CheckTrainList(int series)			// проверка поездов, подъезжающих к све
 
 
 
+					Train train = cast<Train>Router.GetGameObject(TC.trainId);
 					int priority;
 
 
 					if( new_state != state)
 						{
-						priority = (cast<Train> (Router.GetGameObject(TC.trainId) ) ).GetTrainPriorityNumber();
+						priority = train.GetTrainPriorityNumber();
 
 						if(priority > 1)
 							priority = 2;
@@ -1370,43 +1371,43 @@ thread void CheckTrainList(int series)			// проверка поездов, подъезжающих к све
 
 					if(new_state == 2 and (state == 1 or state == 6 or state == 0) )
 						{
-						UpdateSignState(sig1,1,priority);
+						UpdateSignState(sig1,1,priority, train);
 						sig1.train_is_l = true;
 						}
 
 
 					else if(new_state == 5 and (state == 3 or state == 4 or state == 0) )
 						{
-						UpdateSignState(sig1,3,priority);
+						UpdateSignState(sig1,3,priority, train);
 						}
 
 
 					else if((new_state == 3 and (state == 2 or state == 5)) or (new_state == 0 and state == 2))
 						{
-						UpdateSignState(sig1,2,priority);
+						UpdateSignState(sig1,2,priority, train);
 						sig1.train_is_l = false;
 						}
 
 					else if((new_state == 6 and (state == 2 or state == 5)) or (new_state == 0 and state == 5))
 						{
-						UpdateSignState(sig1,4,priority);
+						UpdateSignState(sig1,4,priority, train);
 						}
 
 					else if((new_state == 3 and (state == 1 or state == 6)) or (new_state == 0 and state == 1))
 						{
-						UpdateSignState(sig1,1,priority);
-						UpdateSignState(sig1,2,priority);
+						UpdateSignState(sig1,1,priority, train);
+						UpdateSignState(sig1,2,priority, train);
 						sig1.train_is_l = false;
 						}
 
 					else if((new_state == 6 and (state == 3 or state == 4)) or (new_state == 0 and state == 4))
 						{
-						UpdateSignState(sig1,3,priority);
-						UpdateSignState(sig1,4,priority);
+						UpdateSignState(sig1,3,priority, train);
+						UpdateSignState(sig1,4,priority, train);
 						}
 
 					if(new_state == 0 and state == 0)
-						TrainCleaner(sig1, (cast<Train> (Router.GetGameObject(TC.trainId) ) ), i, j, false );
+						TrainCleaner(sig1, train, i, j, false );
 					else
 						{
 						TC.state[j]=new_state;
@@ -1717,7 +1718,7 @@ void MultiplayerClientHandler1(Message msg)
 			{
 			int i;
 			for(i=0;i<zxExtra.size();i++)
-				zxExtra[i].UpdateSignalState( (cast<zxSignalLink>(Signals.DBSE[num].Object)).sign , 0, -1);
+				zxExtra[i].UpdateSignalState( (cast<zxSignalLink>(Signals.DBSE[num].Object)).sign , 0, -1, null);
 			}
 
 		}
@@ -2533,18 +2534,6 @@ public string  LibraryCall(string function, string[] stringParam, GSObject[] obj
 			blink_sig[old_size]= sig1;
 			}
 
-		}
-
-	else if(function=="span_dir_changed")
-		{
-		zxSignal sig1=cast<zxSignal>objectParam[0];
-
-		if(zxExtra.size() > 0)
-			{
-			int i;
-			for(i=0;i<zxExtra.size();i++)
-				zxExtra[i].UpdateSignalSpanDirection(sig1);
-			}
 		}
 
 

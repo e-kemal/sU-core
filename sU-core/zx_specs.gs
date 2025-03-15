@@ -450,13 +450,13 @@ class zxMarker isclass Trackside
 
 class zxExtraLinkBase
 {
-	public void UpdateSignalState(zxSignal zxsign, int NewState, int priority)
+	public void UpdateSignalState(zxSignal zxsign, int reason, int priority)
 		{
 		}
 
-	public void UpdateSignalSpanDirection(zxSignal zxsign)
-		{
-		}
+	public void UpdateSignalState(zxSignal zxsign, int reason, int priority, Train train) {
+		UpdateSignalState(zxsign, reason, priority);
+	}
 };
 
 

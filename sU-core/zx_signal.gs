@@ -1150,9 +1150,6 @@ public bool Switch_span(bool obligatory)		// повернуть перегон в сторону этого с
 
 	UpdateState(0, -1);
 
-	mainLib.LibraryCall("span_dir_changed",null,GSO);
-
-
 	if(IsServer)
 		mainLib.LibraryCall("mult_settings",null,GSO);
 
