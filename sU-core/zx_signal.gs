@@ -356,7 +356,9 @@ void MakeBUArrow()
 		else
 			kor_BU[0] = SetFXAttachment("att0",GetAsset().FindAsset("arrow1"));
 
-		kor_BU[1] = kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
+		if (kor_BU[0]) {
+			kor_BU[1] = kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
+		}
 
 
 		SetBUArrow(false);
@@ -371,8 +373,10 @@ void MakeBUArrow()
 		else
 			kor_BU[0] = SetFXAttachment("att0",GetAsset().FindAsset("arrow2"));
 
-		kor_BU[1] = kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
-		kor_BU[2] = kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
+		if (kor_BU[0]) {
+			kor_BU[1] = kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
+			kor_BU[2] = kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
+		}
 
 		SetBUArrow(false);
 		}
@@ -380,9 +384,10 @@ void MakeBUArrow()
 
 void SetBUArrow(bool state)
 	{
-	kor_BU[1].SetMeshVisible("default",state,0.5);
+	if (kor_BU.size() > 1 and kor_BU[1])
+		kor_BU[1].SetMeshVisible("default",state,0.5);
 
-	if(kor_BU.size()==3)
+	if (kor_BU.size() > 2 and kor_BU[2])
 		kor_BU[2].SetMeshVisible("default",state,0.5);
 
 	}
@@ -923,7 +928,7 @@ public void ShowName(bool reset)
 			if(name_str[i] != "")
 				{
 				MeshObject MO = SetFXAttachment(name_str[i], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[i]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[i]);
 				}
 			}
 		}
@@ -944,24 +949,24 @@ public void ShowName(bool reset)
 			{
 			case 1:
 				MO = SetFXAttachment(name_str[2], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[0]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[0]);
 				break;
 
 			case 2:
 				MO = SetFXAttachment(name_str[1], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[0]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[0]);
 				MO = SetFXAttachment(name_str[3], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[1]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[1]);
 				break;
 
 			default:
 			case 3:
 				MO = SetFXAttachment(name_str[0], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[0]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[0]);
 				MO = SetFXAttachment(name_str[2], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[1]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[1]);
 				MO = SetFXAttachment(name_str[4], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[2]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[2]);
 				break;
 
 			}
@@ -976,24 +981,24 @@ public void ShowName(bool reset)
 				{
 				case 1:
 					MO = SetFXAttachment(name_str[7], tabl_m);
-					MO.SetFXTextureReplacement("texture",tex,tabl[q]);
+					if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[q]);
 					break;
 
 				case 2:
 					MO = SetFXAttachment(name_str[6], tabl_m);
-					MO.SetFXTextureReplacement("texture",tex,tabl[q]);
+					if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[q]);
 					MO = SetFXAttachment(name_str[8], tabl_m);
-					MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
+					if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
 					break;
 
 				default:
 				case 3:
 					MO = SetFXAttachment(name_str[5], tabl_m);
-					MO.SetFXTextureReplacement("texture",tex,tabl[q]);
+					if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[q]);
 					MO = SetFXAttachment(name_str[7], tabl_m);
-					MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
+					if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
 					MO = SetFXAttachment(name_str[9], tabl_m);
-					MO.SetFXTextureReplacement("texture",tex,tabl[(q+2)]);
+					if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[(q+2)]);
 					break;
 
 				}
@@ -2281,13 +2286,13 @@ public void SetPropertyValue(string id, float val)
 				{
 				float dz = Str.ToFloat(TrainUtil.GetUpTo(mu_head_displ,","));
 
-				MU.MainMesh.SetMeshTranslation("default", 0, 0, dz );
-				MU.Table.SetMeshTranslation("default", 0, 0, dz );
+				if (MU.MainMesh) MU.MainMesh.SetMeshTranslation("default", 0, 0, dz );
+				if (MU.Table) MU.Table.SetMeshTranslation("default", 0, 0, dz );
 				}
 			else
 				{
-				MU.MainMesh.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
-				MU.Table.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
+				if (MU.MainMesh) MU.MainMesh.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
+				if (MU.Table) MU.Table.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
 				}
 			}
 		}
@@ -2324,11 +2329,11 @@ void SetHeadRotation(bool start)
 
 		if(MU)
 			{
-			MU.MainMesh.SetMeshOrientation("default",0, 0, head_rot );
-			MU.Table.SetMeshOrientation("default", 0, 0, head_rot );
+			if (MU.MainMesh) MU.MainMesh.SetMeshOrientation("default",0, 0, head_rot );
+			if (MU.Table) MU.Table.SetMeshOrientation("default", 0, 0, head_rot );
 			}
 
-		if(kor_BU)
+		if(kor_BU and kor_BU.size() and kor_BU[0])
 			kor_BU[0].SetMeshOrientation("default", 0, 0, head_rot );
 
 		}
@@ -2351,8 +2356,8 @@ void SetNewGolPosition(bool enable)
 
 			float dz = Str.ToFloat(temp[0]);
 
-			MU.MainMesh.SetMeshTranslation("default", 0, 0, dz );
-			MU.Table.SetMeshTranslation("default", 0, 0, dz );
+			if (MU.MainMesh) MU.MainMesh.SetMeshTranslation("default", 0, 0, dz );
+			if (MU.Table) MU.Table.SetMeshTranslation("default", 0, 0, dz );
 
 			for(i=1;i<mu_h_n;i++)
 				{
@@ -2362,8 +2367,8 @@ void SetNewGolPosition(bool enable)
 			}
 		else
 			{
-			MU.MainMesh.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
-			MU.Table.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
+			if (MU.MainMesh) MU.MainMesh.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
+			if (MU.Table) MU.Table.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
 			}
 
 		}
@@ -3103,13 +3108,13 @@ public void LinkPropertyValue(string id)
 					{
 					float dz = Str.ToFloat(TrainUtil.GetUpTo(mu_head_displ,","));
 
-					MU.MainMesh.SetMeshTranslation("default", 0, 0, dz );
-					MU.Table.SetMeshTranslation("default", 0, 0, dz );
+					if (MU.MainMesh) MU.MainMesh.SetMeshTranslation("default", 0, 0, dz );
+					if (MU.Table) MU.Table.SetMeshTranslation("default", 0, 0, dz );
 					}
 				else
 					{
-					MU.MainMesh.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
-					MU.Table.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
+					if (MU.MainMesh) MU.MainMesh.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
+					if (MU.Table) MU.Table.SetMeshTranslation("default", 0, 0, MU.BasicMeshOffset);
 					}
 				}
 			}
@@ -3584,6 +3589,226 @@ public void RefreshBrowser(Message msg)
 {
  	if(mn)
 		mn.LoadHTMLString(me.GetAsset(),GetContentViewDetails());
+}
+
+
+void OnMeshAttached(Message msg) {
+	if (TrainUtil.HasPrefix(msg.minor, "tabl") and msg.minor.size() > 4 and msg.minor[4] >= '0' and msg.minor[4] <= '9') {
+		int[] tabl = new int[7];
+		int n_tabl;
+		int q=0;
+		int i=0;
+		string sv_name = privateName;
+		int j = 0;
+		int[] temp = new int[2];
+		while(i<sv_name.size() and j<7) {
+			tabl[j]=zxSymbolTranslator.GetArabic(i, sv_name);
+
+			if(tabl[j]<0) {
+				if(i<sv_name.size()-1) {
+					string part=sv_name[i,i+2];
+					tabl[j]=zxSymbolTranslator.GetCirillic(part);
+				}
+
+				if(tabl[j] < 0) {
+					zxSymbolTranslator.GetRome(i, sv_name, temp);
+
+					if(temp[0] >= 0) {
+						tabl[j] = temp[0];
+						i = i + temp[1];
+					}
+					else if(sv_name[i]==' ') {
+						tabl[j] = 21;
+					}
+					else if(sv_name[i]=='-') {
+						tabl[j] = 51;
+					}
+					else {
+						j--;
+					}
+				}
+				else {
+					i++;
+				}
+			}
+
+			j++;
+			i++;
+		}
+		n_tabl = j;
+		if(!isMacht and n_tabl>3) {
+			while(tabl[q]<22 and q<n_tabl ) {
+				q++;
+			}
+
+			if(q < n_tabl) {
+				while(q<n_tabl and tabl[q]>=22 ) {
+					q++;
+				}
+
+				if(q>(n_tabl-1) or q>3) {
+					q=3;
+				}
+			}
+			else {
+				q=3;
+			}
+		}
+		else {
+			q = n_tabl;
+		}
+		if(isMacht) {
+			int n = Str.ToInt(msg.minor[4,]);
+			MeshObject MO = GetFXAttachment(msg.minor);
+			if (MO) MO.SetFXTextureReplacement("texture", tex, tabl[n]);
+		}
+		else if(q > 0) {
+			/*
+			ряды табичек
+
+			01234
+			56789
+			*/
+			MeshObject MO;
+
+			switch(q) {
+				case 1:
+					if (MO = GetFXAttachment("tabl2")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[0]);
+					}
+					break;
+
+				case 2:
+					if (MO = GetFXAttachment("tabl1")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[0]);
+					}
+					if (MO = GetFXAttachment("tabl3")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[1]);
+					}
+					break;
+
+				default:
+				case 3:
+					if (MO = GetFXAttachment("tabl0")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[0]);
+					}
+					if (MO = GetFXAttachment("tabl2")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[1]);
+					}
+					if (MO = GetFXAttachment("tabl4")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[2]);
+					}
+					break;
+			}
+
+			int q1 = n_tabl - q;
+
+			if(q1 > 0) {
+				switch(q1) {
+					case 1:
+						if (MO = GetFXAttachment("tabl7")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q]);
+						}
+						break;
+
+					case 2:
+						if (MO = GetFXAttachment("tabl6")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q]);
+						}
+						if (MO = GetFXAttachment("tabl8")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q + 1]);
+						}
+						break;
+
+					default:
+					case 3:
+						if (MO = GetFXAttachment("tabl5")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q]);
+						}
+						if (MO = GetFXAttachment("tabl7")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q + 1]);
+						}
+						if (MO = GetFXAttachment("tabl9")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q + 2]);
+						}
+						break;
+				}
+			}
+		}
+	}
+	else if (msg.minor.size() == 2 and 'c' == msg.minor[0] and msg.minor[1] >= '0' and msg.minor[1] <= '9') {
+		int i;
+		int n = lens_kit.size();
+		for (i = 0; i < n; ++i) {
+			if (lens_kit[i] == msg.minor[1]) {
+				MC.LightMeshes[i] = GetFXAttachment(msg.minor);
+			}
+		}
+	}
+	else if (msg.minor.size() == 2 and 'k' == msg.minor[0] and msg.minor[1] >= '0' and msg.minor[1] <= '9') {
+		int i;
+		int n = lens_kit.size();
+		for (i = 0; i < n; ++i) {
+			if (lens_kit[i] == msg.minor[1]) {
+				MC.KozMeshes[i] = GetFXAttachment(msg.minor);
+				MC.kozirki[i] = true;
+			}
+		}
+	}
+	else if ("router" == msg.minor) {
+		MU.MainMesh = GetFXAttachment(msg.minor);
+		SetNewGolPosition(true);
+		SetHeadRotation(true);
+	}
+	else if ("arrow0" == msg.minor and kor_BU[0] == msg.dst) {
+		kor_BU[1] = kor_BU[0].GetFXAttachment("arrow");
+		SetBUArrow(false);
+	}
+	else if ("arrow1" == msg.minor and kor_BU[0] == msg.dst) {
+		kor_BU[2] = kor_BU[0].GetFXAttachment("arrow");
+		SetBUArrow(false);
+	}
+	else if ("att0" == msg.minor) {
+		if (MU) {
+			MU.Table = GetFXAttachment(msg.minor);
+			SetNewGolPosition(true);
+			SetHeadRotation(true);
+		}
+		else {
+			kor_BU[0] = GetFXAttachment(msg.minor);
+			if (kor_BU[0]) {
+				Sniff(kor_BU[0], "fx-mesh-attached", null, true);
+				if (kor_BU_1 or kor_BU_2) {
+					kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
+				}
+				if (kor_BU_2) {
+					kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
+				}
+				SetNewGolPosition(true);
+				SetHeadRotation(true);
+			}
+		}
+	}
+	else if ("att1" == msg.minor) {
+		if (!predvhod) {
+			kor_BU[0] = GetFXAttachment(msg.minor);
+			if (kor_BU[0]) {
+				Sniff(kor_BU[0], "fx-mesh-attached", null, true);
+				if (kor_BU_1 or kor_BU_2) {
+					kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
+				}
+				if (kor_BU_2) {
+					kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
+				}
+				SetNewGolPosition(true);
+				SetHeadRotation(true);
+			}
+		}
+	}
+	else if ("provod0" == msg.minor or "provod1" == msg.minor or "provod2" == msg.minor or "provod3" == msg.minor) {}
+	else {
+		Interface.Print("zx> OnMeshAttached: "+msg.minor);
+	}
 }
 
 
@@ -4359,6 +4584,7 @@ public void Init(Asset asset)
 			gol_tex =GetAsset().FindAsset("gol_tex");
 		}
 
+	AddHandler(me, "fx-mesh-attached", null, "OnMeshAttached");
 	AddHandler(me,"MapObject","View-Details","ViewDetails");
   	AddHandler(me,"RefreshBrowser","","RefreshBrowser");
 	AddHandler(me,"Browser-URL","","ChangeText");

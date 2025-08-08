@@ -644,6 +644,7 @@ public void Init(Asset self)
 		isMacht = true;
 		}
 
+	AddHandler(me, "fx-mesh-attached", null, "OnMeshAttached");
 	}
 
 
@@ -870,7 +871,7 @@ public void ShowName(bool reset)
 			if(name_str[i] != "")
 				{
 				MeshObject MO = SetFXAttachment(name_str[i], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[i]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[i]);
 				}
 			}
 		}
@@ -890,23 +891,23 @@ public void ShowName(bool reset)
 		if(q == 1)
 			{
 			MeshObject MO = SetFXAttachment(name_str[2], tabl_m);
-			MO.SetFXTextureReplacement("texture",tex,tabl[0]);
+			if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[0]);
 			}
 		else if(q == 2)
 			{
 			MeshObject MO = SetFXAttachment(name_str[1], tabl_m);
-			MO.SetFXTextureReplacement("texture",tex,tabl[0]);
+			if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[0]);
 			MO = SetFXAttachment(name_str[3], tabl_m);
-			MO.SetFXTextureReplacement("texture",tex,tabl[1]);
+			if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[1]);
 			}
 		else if(q == 3)
 			{
 			MeshObject MO = SetFXAttachment(name_str[0], tabl_m);
-			MO.SetFXTextureReplacement("texture",tex,tabl[0]);
+			if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[0]);
 			MO = SetFXAttachment(name_str[2], tabl_m);
-			MO.SetFXTextureReplacement("texture",tex,tabl[1]);
+			if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[1]);
 			MO = SetFXAttachment(name_str[4], tabl_m);
-			MO.SetFXTextureReplacement("texture",tex,tabl[2]);
+			if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[2]);
 			}
 
 		int q1 = n_tabl - q;
@@ -918,28 +919,179 @@ public void ShowName(bool reset)
 			if(q1 == 1)
 				{
 				MeshObject MO = SetFXAttachment(name_str[7], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[q]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[q]);
 				}
 			else if(q1 == 2)
 				{
 				MeshObject MO = SetFXAttachment(name_str[6], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[q]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[q]);
 				MO = SetFXAttachment(name_str[8], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
 				}
 			else if(q1 == 3)
 				{
 				MeshObject MO = SetFXAttachment(name_str[5], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[q]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[q]);
 				MO = SetFXAttachment(name_str[7], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[(q+1)]);
 				MO = SetFXAttachment(name_str[9], tabl_m);
-				MO.SetFXTextureReplacement("texture",tex,tabl[(q+2)]);
+				if (MO) MO.SetFXTextureReplacement("texture",tex,tabl[(q+2)]);
 				}
 			}
 		}
 }
 
+void OnMeshAttached(Message msg) {
+	if (TrainUtil.HasPrefix(msg.minor, "tabl") and msg.minor.size() > 4 and msg.minor[4] >= '0' and msg.minor[4] <= '9') {
+		int[] tabl = new int[7];
+		int n_tabl;
+		int q=0;
+		int i=0;
+		string sv_name = privateName;
+		int j = 0;
+		int[] temp = new int[2];
+		while(i<sv_name.size() and j<7) {
+			tabl[j]=zxSymbolTranslator.GetArabic(i, sv_name);
+
+			if(tabl[j]<0) {
+				if(i<sv_name.size()-1) {
+					string part=sv_name[i,i+2];
+					tabl[j]=zxSymbolTranslator.GetCirillic(part);
+				}
+
+				if(tabl[j] < 0) {
+					zxSymbolTranslator.GetRome(i, sv_name, temp);
+
+					if(temp[0] >= 0) {
+						tabl[j] = temp[0];
+						i = i + temp[1];
+					}
+					else if(sv_name[i]==' ') {
+						tabl[j] = 21;
+					}
+					else if(sv_name[i]=='-') {
+						tabl[j] = 51;
+					}
+					else {
+						j--;
+					}
+				}
+				else {
+					i++;
+				}
+			}
+
+			j++;
+			i++;
+		}
+		n_tabl = j;
+		if(!isMacht and n_tabl>3) {
+			while(tabl[q]<22 and q<n_tabl ) {
+				q++;
+			}
+
+			if(q < n_tabl) {
+				while(q<n_tabl and tabl[q]>=22 ) {
+					q++;
+				}
+
+				if(q>(n_tabl-1) or q>3) {
+					q=3;
+				}
+			}
+			else {
+				q=3;
+			}
+		}
+		else {
+			q = n_tabl;
+		}
+		if(isMacht) {
+			int n = Str.ToInt(msg.minor[4,]);
+			MeshObject MO = GetFXAttachment(msg.minor);
+			if (MO) MO.SetFXTextureReplacement("texture", tex, tabl[n]);
+		}
+		else if(q > 0) {
+			/*
+			ряды табичек
+
+			01234
+			56789
+			*/
+			MeshObject MO;
+
+			switch(q) {
+				case 1:
+					if (MO = GetFXAttachment("tabl2")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[0]);
+					}
+					break;
+
+				case 2:
+					if (MO = GetFXAttachment("tabl1")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[0]);
+					}
+					if (MO = GetFXAttachment("tabl3")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[1]);
+					}
+					break;
+
+				default:
+				case 3:
+					if (MO = GetFXAttachment("tabl0")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[0]);
+					}
+					if (MO = GetFXAttachment("tabl2")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[1]);
+					}
+					if (MO = GetFXAttachment("tabl4")) {
+						MO.SetFXTextureReplacement("texture", tex, tabl[2]);
+					}
+					break;
+			}
+
+			int q1 = n_tabl - q;
+
+			if(q1 > 0) {
+				switch(q1) {
+					case 1:
+						if (MO = GetFXAttachment("tabl7")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q]);
+						}
+						break;
+
+					case 2:
+						if (MO = GetFXAttachment("tabl6")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q]);
+						}
+						if (MO = GetFXAttachment("tabl8")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q + 1]);
+						}
+						break;
+
+					default:
+					case 3:
+						if (MO = GetFXAttachment("tabl5")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q]);
+						}
+						if (MO = GetFXAttachment("tabl7")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q + 1]);
+						}
+						if (MO = GetFXAttachment("tabl9")) {
+							MO.SetFXTextureReplacement("texture", tex, tabl[q + 2]);
+						}
+						break;
+				}
+			}
+		}
+	}
+	else if ("router" == msg.minor) {
+		RouterO.MainMesh = GetFXAttachment(msg.minor);
+	}
+	else if ("att0" == msg.minor) {
+		RouterO.Table = GetFXAttachment(msg.minor);
+	}
+}
 
 public string GetCntName(void)
 	{
