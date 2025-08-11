@@ -3790,7 +3790,7 @@ void OnMeshAttached(Message msg) {
 		}
 	}
 	else if ("att1" == msg.minor) {
-		if (!predvhod) {
+		if (!predvhod and kor_BU) {
 			kor_BU[0] = GetFXAttachment(msg.minor);
 			if (kor_BU[0]) {
 				Sniff(kor_BU[0], "fx-mesh-attached", null, true);
@@ -3804,10 +3804,6 @@ void OnMeshAttached(Message msg) {
 				SetHeadRotation(true);
 			}
 		}
-	}
-	else if ("provod0" == msg.minor or "provod1" == msg.minor or "provod2" == msg.minor or "provod3" == msg.minor) {}
-	else {
-		Interface.Print("zx> OnMeshAttached: "+msg.minor);
 	}
 }
 

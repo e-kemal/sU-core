@@ -419,7 +419,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 
 void TrainCatcher(zxSignal entered_sign, Train curr_train)
 	{
-	int number=entered_sign.OwnId;
+	int number = -1;	//entered_sign.OwnId;
 	if(number<0)							// база светофоров ещё непроиндексирована, но уже построена
 		number=Signals.Find(entered_sign.GetName());
 
@@ -660,7 +660,7 @@ void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int si
 
 	if(sign_numb < 0)
 		{
-		int number=entered_sign.OwnId;
+		int number = -1;	//entered_sign.OwnId;
 		if(number<0)							// база светофоров ещё непроиндексирована
 			number=Signals.Find(entered_sign.GetName());
 
@@ -721,7 +721,7 @@ void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int si
 		}
 	else
 		{
-		Interface.Log("Signal "+entered_sign.privateName+"@"+entered_sign.stationName+" id " + entered_sign.OwnId + " not in train "+train_arr.DBSE[train_nmb].a+" array");
+		Interface.Log("Signal "+entered_sign.privateName+"@"+entered_sign.stationName+" id " + /*entered_sign.OwnId +*/ " not in train "+train_arr.DBSE[train_nmb].a+" array");
 		
 /*		string temp;
 		int i = 0;
@@ -800,7 +800,7 @@ void TrainSpeedTriggerCatcher(Message msg)
 
 
 
-	int number=entered_object.OwnId;
+	int number = -1;	//entered_object.OwnId;
 	if(number<0)							// база светофоров ещё непроиндексирована
 		number=SpeedObjects.Find(entered_object.GetName());
 
@@ -899,7 +899,7 @@ void TrainSpeedTriggerCleaner(Message msg)
 		return;
 		}
 
-	int number=entered_object.OwnId;
+	int number = -1;	//entered_object.OwnId;
 	if(number<0)							// база светофоров ещё непроиндексирована
 		number=SpeedObjects.Find(entered_object.GetName());
 
@@ -996,7 +996,7 @@ void ReUpdateSignals()
 		{
 		zxSignal sign = (cast<zxSignalLink>(Signals.DBSE[i].Object)).sign;
 		sign.UpdateState(0, -1);
-		sign.OwnId = i;
+		// sign.OwnId = i;
 
 		Sniff(sign, "Object", "Enter", true);
 		Sniff(sign, "Object", "Leave", true);
@@ -1057,11 +1057,11 @@ thread void SignalInitiation()			// запуск светофоров
 		Sleep(2);
 		}
 
-	int i;
-	for(i=0;i<Signals.N;i++)
-		{
-		(cast<zxSignalLink>(Signals.DBSE[i].Object)).sign.OwnId = i;
-		}
+	// int i;
+	// for(i=0;i<Signals.N;i++)
+	// 	{
+	// 	(cast<zxSignalLink>(Signals.DBSE[i].Object)).sign.OwnId = i;
+	// 	}
 	
 
 	if(TrainzScript.GetTrainzVersion() >= 4.0)
@@ -1082,18 +1082,18 @@ thread void SpeedObjInitiation()			// запуск объектов ограничений скорости
 		Sleep(1);
 		}
 
-	int i;
-	for(i=0;i<SpeedObjects.N;i++)
-		(cast<zxSpeedObject>(SpeedObjects.DBSE[i].Object)).OwnId = i;
+	// int i;
+	// for(i=0;i<SpeedObjects.N;i++)
+	// 	(cast<zxSpeedObject>(SpeedObjects.DBSE[i].Object)).OwnId = i;
 
 
-	if(TrainzScript.GetTrainzBuild() >= 98695)
-		{
-		Sleep(10);
+	// if(TrainzScript.GetTrainzBuild() >= 98695)
+	// 	{
+	// 	Sleep(10);
 
-		for(i=0;i<SpeedObjects.N;i++)
-			(cast<zxSpeedObject>(SpeedObjects.DBSE[i].Object)).OwnId = i;
-		}
+	// 	for(i=0;i<SpeedObjects.N;i++)
+	// 		(cast<zxSpeedObject>(SpeedObjects.DBSE[i].Object)).OwnId = i;
+	// 	}
 	}
 
 
@@ -1935,7 +1935,7 @@ public string  LibraryCall(string function, string[] stringParam, GSObject[] obj
 		zxSignalLink sign_link = cast<zxSignalLink>(Signals.DBSE[number].Object);
 
 		sign_link.sign = curr_signal;
-		sign_link.sign.OwnId = -1;
+		// sign_link.sign.OwnId = -1;
 
 
 		Sniff(curr_signal, "Object", "Enter", true);
@@ -1981,7 +1981,7 @@ public string  LibraryCall(string function, string[] stringParam, GSObject[] obj
 
 
 		zxSpeedObject speed_link = cast<zxSpeedObject>(SpeedObjects.DBSE[number].Object);
-		speed_link.OwnId = -1;
+		// speed_link.OwnId = -1;
 
 
 		Sniff(curr_speed_obj, "Object", "Enter", true);

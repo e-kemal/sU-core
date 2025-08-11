@@ -26,7 +26,7 @@ class zxSpeedObject isclass Trigger
 	public float max_speed_pass;	// установленное ограничение пассажирским
 	public float max_speed_cargo;	// установленное ограничение грузовым
 
-	public int OwnId;		// идентификатор, каждый раз новый
+	// public int OwnId;		// идентификатор, каждый раз новый
 };
 
 
@@ -82,7 +82,7 @@ class zxSignal isclass Signal, ALSN_Provider
 
 
 
-	public int OwnId;		// идентификатор, каждый раз новый
+	// public int OwnId;		// идентификатор, каждый раз новый
 
 	public bool train_open;		// светофор открыт в поездном режиме
 	public bool shunt_open;		// светофор открыт в маневровом режиме
