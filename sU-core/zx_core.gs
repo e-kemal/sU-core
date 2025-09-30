@@ -602,6 +602,9 @@ void RemoveTrain(Message msg)
 
 void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int sign_numb, bool recheck) // ожидание съезда поезда с сигнала, ловля Object,Leave
 	{
+	if (entered_sign) {
+		entered_sign.SetMainStateSpeedLim();
+	}
 	if(!curr_train or (train_nmb < 0))  // поезд потерян
 		{
 		if(entered_sign)

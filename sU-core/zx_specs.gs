@@ -254,11 +254,9 @@ class zxSignal isclass Signal, ALSN_Provider
 		float tmp_max_speed_cargo = speed_soup.GetNamedTagAsInt("c"+s)/3.6;
 
 		
-		if(tmp_max_speed_pass > 0)
-			max_speed_pass = tmp_max_speed_pass;
+		max_speed_pass = tmp_max_speed_pass;
 
-		if(tmp_max_speed_cargo > 0)
-			max_speed_cargo = tmp_max_speed_cargo;
+		max_speed_cargo = tmp_max_speed_cargo;
 
 
 		if(zxSP)
