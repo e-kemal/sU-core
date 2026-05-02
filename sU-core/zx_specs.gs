@@ -6,20 +6,6 @@ include "Browser.gs"
 include "zx_indication.gs"
 
 
-class TrainContainer isclass GSObject
-{
-	public GameObjectID trainId;
-	public bool IsStopped;		// стоящий
-
-	public int[] signal;		// внутренний идентификатор светофора
-	public int[] state;  		// 0 - подошедший к светофору, 1 - проехавший головой светофор, 2 - заехавший за светофор
-	public bool HighSpeed;
-
-
-	public int[] speed_object;
-
-};
-
 
 class zxSpeedObject isclass Trigger
 {
@@ -478,4 +464,19 @@ class zxExtraLinkContainer isclass GSObject
 class zxSignalLink isclass GSObject
 {
 	public zxSignal sign;
+};
+
+
+class TrainContainer isclass GSObject
+{
+	public GameObjectID trainId;
+	public bool IsStopped;		// стоящий
+
+	public zxSignalLink[] signal;		// внутренний идентификатор светофора
+	public int[] state;  		// 0 - подошедший к светофору, 1 - проехавший головой светофор, 2 - заехавший за светофор
+	public bool HighSpeed;
+
+
+	public int[] speed_object;
+
 };

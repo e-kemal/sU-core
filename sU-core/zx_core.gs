@@ -250,7 +250,7 @@ void LogAllTrains()
 		int j;
 		for(j=0;j<train_con.signal.size();j++)
 			{
-			log1=log1+" "+ (cast<zxSignalLink>(Signals.DBSE[ train_con.signal[j] ]).Object).sign.GetName();
+			log1=log1+" "+ train_con.signal[j].sign.GetName();
 			}
 
 		Interface.Log(log1);
@@ -272,7 +272,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 			{
 			if(train_con.state[i]>=2 and train_con.state[i]<=3)
 				{
-				zxSignal sig = (cast<zxSignalLink>(Signals.DBSE[(train_con.signal[i])].Object)).sign;
+				zxSignal sig = (train_con.signal[i]).sign;
 				
 				if((!(sig.Type & zxSignal.ST_UNLINKED) or sig.x_mode) and (sig.MainState != zxIndication.STATE_B) and (sig.MainState != 0))
 					{
@@ -321,7 +321,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 				{
 				if(train_con.state[i]>=2 and train_con.state[i]<=3)
 					{
-					zxSignal sig = (cast<zxSignalLink>(Signals.DBSE[(train_con.signal[i])].Object)).sign;
+					zxSignal sig = (train_con.signal[i]).sign;
 
 					if((!(sig.Type & zxSignal.ST_UNLINKED) or sig.x_mode) and (sig.MainState != zxIndication.STATE_B))
 						sig.SetSpeedLimit(max_speed);
@@ -346,7 +346,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 			{
 			if(train_con.state[i]>=2 and train_con.state[i]<=3)
 				{
-				zxSignal sig = (cast<zxSignalLink>(Signals.DBSE[(train_con.signal[i])].Object)).sign;
+				zxSignal sig = (train_con.signal[i]).sign;
 
 				if((!(sig.Type & zxSignal.ST_UNLINKED) or sig.x_mode) and (sig.MainState != zxIndication.STATE_B) and (sig.MainState != 0))
 					{
@@ -395,7 +395,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 				{
 				if(train_con.state[i]>=2 and train_con.state[i]<=3)
 					{
-					zxSignal sig = (cast<zxSignalLink>(Signals.DBSE[(train_con.signal[i])].Object)).sign;
+					zxSignal sig = (train_con.signal[i]).sign;
 					
 					if((!(sig.Type & zxSignal.ST_UNLINKED) or sig.x_mode) and (sig.MainState != zxIndication.STATE_B))
 						sig.SetSpeedLimit(max_speed);
@@ -482,8 +482,8 @@ void TrainCatcher(zxSignal entered_sign, Train curr_train)
 
 		train_con.HighSpeed=high_speed;
 
-		train_con.signal=new int[1];
-		train_con.signal[0]=number;
+		train_con.signal=new zxSignalLink[1];
+		train_con.signal[0]=cast<zxSignalLink>(Signals.DBSE[number].Object);
 		train_con.state=new int[1];
 		train_con.state[0]=state1;
 		train_con.speed_object=new int[0];
@@ -508,17 +508,17 @@ void TrainCatcher(zxSignal entered_sign, Train curr_train)
 
 		while(i<size1 and !exist)
 			{
-			if(train_con.signal[i] == number)
+			if(train_con.signal[i] == Signals.DBSE[number].Object)
 				exist=true;
 			i++;
 			}
 
 		if(!exist)		// но не на этот
 			{
-			train_con.signal[size1,size1]=new int[1];
+			train_con.signal[size1,size1]=new zxSignalLink[1];
 			train_con.state[size1,size1]=new int[1];
 
-			train_con.signal[size1]=number;
+			train_con.signal[size1]=cast<zxSignalLink>(Signals.DBSE[number].Object);
 			train_con.state[size1]=state1;
 
 			train_con.HighSpeed=high_speed;
@@ -578,9 +578,9 @@ void RemoveTrain(Message msg)
 
 		for(i=0;i<train_con.signal.size();i++)
 			{
-			int number = train_con.signal[i];
-			(cast<zxSignalLink>(Signals.DBSE[number].Object)).sign.RemoveTrainId(train_id);
-			UpdateSignState( (cast<zxSignalLink>(Signals.DBSE[number].Object)).sign,5,-1);
+			zxSignalLink lnk = train_con.signal[i];
+			lnk.sign.RemoveTrainId(train_id);
+			UpdateSignState( lnk.sign,5,-1);
 			}
 
 		train_con.signal[0, ] = null;
@@ -668,7 +668,7 @@ void TrainCleaner(zxSignal entered_sign, Train curr_train, int train_nmb, int si
 		int size1 = train_con.signal.size();
 		while(sign_numb<0 and i<size1)
 			{
-			if(train_con.signal[i] == number)
+			if(train_con.signal[i] == Signals.DBSE[number].Object)
 				sign_numb = i;
 			i++;
 			}
@@ -840,7 +840,7 @@ void TrainSpeedTriggerCatcher(Message msg)
 
 		train_con.speed_object=new int[1];
 		train_con.speed_object[0] = number;
-		train_con.signal=new int[0];
+		train_con.signal=new zxSignalLink[0];
 		train_con.state=new int[0];
 
 
@@ -1328,7 +1328,7 @@ thread void CheckTrainList(int series)			// проверка поездов, подъезжающих к све
 
 				while((j<TC.signal.size()) and (i<train_arr.N))
 					{
-					zxSignal sig1 = (cast<zxSignalLink>(Signals.DBSE[ (TC.signal[j]) ].Object)).sign;
+					zxSignal sig1 = (TC.signal[j]).sign;
 
 					int state = TC.state[j];
 /*
