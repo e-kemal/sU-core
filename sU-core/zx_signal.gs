@@ -3756,9 +3756,11 @@ void OnMeshAttached(Message msg) {
 		}
 	}
 	else if ("router" == msg.minor) {
-		MU.MainMesh = GetFXAttachment(msg.minor);
-		SetNewGolPosition(true);
-		SetHeadRotation(true);
+		if (MU) {
+			MU.MainMesh = GetFXAttachment(msg.minor);
+			SetNewGolPosition(true);
+			SetHeadRotation(true);
+		}
 	}
 	else if ("arrow0" == msg.minor and kor_BU[0] == msg.dst) {
 		kor_BU[1] = kor_BU[0].GetFXAttachment("arrow");
@@ -3768,41 +3770,22 @@ void OnMeshAttached(Message msg) {
 		kor_BU[2] = kor_BU[0].GetFXAttachment("arrow");
 		SetBUArrow(false);
 	}
-	else if ("att0" == msg.minor) {
-		if (MU) {
-			MU.Table = GetFXAttachment(msg.minor);
-			SetNewGolPosition(true);
-			SetHeadRotation(true);
-		}
-		else {
-			kor_BU[0] = GetFXAttachment(msg.minor);
-			if (kor_BU[0]) {
-				Sniff(kor_BU[0], "fx-mesh-attached", null, true);
-				if (kor_BU_1 or kor_BU_2) {
-					kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
-				}
-				if (kor_BU_2) {
-					kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
-				}
-				SetNewGolPosition(true);
-				SetHeadRotation(true);
-			}
-		}
+	else if ("att0" == msg.minor and MU) {
+		MU.Table = GetFXAttachment(msg.minor);
+		SetNewGolPosition(true);
+		SetHeadRotation(true);
 	}
-	else if ("att1" == msg.minor) {
-		if (!predvhod and kor_BU) {
-			kor_BU[0] = GetFXAttachment(msg.minor);
-			if (kor_BU[0]) {
-				Sniff(kor_BU[0], "fx-mesh-attached", null, true);
-				if (kor_BU_1 or kor_BU_2) {
-					kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
-				}
-				if (kor_BU_2) {
-					kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
-				}
-				SetNewGolPosition(true);
-				SetHeadRotation(true);
+	else if ((("att0" == msg.minor and !MU) or ("att1" == msg.minor and !predvhod)) and kor_BU) {
+		kor_BU[0] = GetFXAttachment(msg.minor);
+		if (kor_BU[0]) {
+			Sniff(kor_BU[0], "fx-mesh-attached", null, true);
+			if (kor_BU_1 or kor_BU_2) {
+				kor_BU[0].SetFXAttachment("arrow0",GetAsset().FindAsset("arrow"));
 			}
+			if (kor_BU_2) {
+				kor_BU[0].SetFXAttachment("arrow1",GetAsset().FindAsset("arrow"));
+			}
+			SetHeadRotation(true);
 		}
 	}
 }
