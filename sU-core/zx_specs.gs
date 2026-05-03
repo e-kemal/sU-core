@@ -477,6 +477,6 @@ class TrainContainer isclass GSObject
 	public bool HighSpeed;
 
 
-	public int[] speed_object;
+	public zxSpeedObject[] speed_object;
 
 };

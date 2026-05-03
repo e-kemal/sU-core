@@ -302,7 +302,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 			}
 		for(i=0;i<train_con.speed_object.size();i++)
 			{
-			zxSpeedObject speed_obj = cast<zxSpeedObject>(SpeedObjects.DBSE[(train_con.speed_object[i])].Object);
+			zxSpeedObject speed_obj = (train_con.speed_object[i]);
 			if(speed_obj.max_speed_pass > 0)
 				{
 				if(!any_speed)
@@ -331,7 +331,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 				}
 			for(i=0;i<train_con.speed_object.size();i++)
 				{
-				zxSpeedObject speed_obj = cast<zxSpeedObject>(SpeedObjects.DBSE[(train_con.speed_object[i])].Object);
+				zxSpeedObject speed_obj = (train_con.speed_object[i]);
 				speed_obj.SetSpeedLimit(max_speed);
 				}
 			}
@@ -376,7 +376,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 			}
 		for(i=0;i<train_con.speed_object.size();i++)
 			{
-			zxSpeedObject speed_obj = cast<zxSpeedObject>(SpeedObjects.DBSE[(train_con.speed_object[i])].Object);
+			zxSpeedObject speed_obj = (train_con.speed_object[i]);
 			if(speed_obj.max_speed_cargo > 0)
 				{
 				if(!any_speed)
@@ -405,7 +405,7 @@ void LowerMaxLimits(TrainContainer train_con, int prior)	// поиск минимального п
 				}
 			for(i=0;i<train_con.speed_object.size();i++)
 				{
-				zxSpeedObject speed_obj = cast<zxSpeedObject>(SpeedObjects.DBSE[(train_con.speed_object[i])].Object);
+				zxSpeedObject speed_obj = (train_con.speed_object[i]);
 				
 				speed_obj.SetSpeedLimit(max_speed);
 				}
@@ -486,7 +486,7 @@ void TrainCatcher(zxSignal entered_sign, Train curr_train)
 		train_con.signal[0]=cast<zxSignalLink>(Signals.DBSE[number].Object);
 		train_con.state=new int[1];
 		train_con.state[0]=state1;
-		train_con.speed_object=new int[0];
+		train_con.speed_object=new zxSpeedObject[0];
 
 
 		(cast<zxSignalLink>(Signals.DBSE[number].Object)).sign.AddTrainId(curr_train.GetGameObjectID());
@@ -838,8 +838,8 @@ void TrainSpeedTriggerCatcher(Message msg)
 
 		train_con.HighSpeed=false;
 
-		train_con.speed_object=new int[1];
-		train_con.speed_object[0] = number;
+		train_con.speed_object=new zxSpeedObject[1];
+		train_con.speed_object[0] = entered_object;
 		train_con.signal=new zxSignalLink[0];
 		train_con.state=new int[0];
 
@@ -861,15 +861,15 @@ void TrainSpeedTriggerCatcher(Message msg)
 
 		while(i<size1 and !exist)
 			{
-			if(train_con.speed_object[i] == number)
+			if(train_con.speed_object[i] == entered_object)
 				exist=true;
 			i++;
 			}
 
 		if(!exist)		// но не на этот
 			{
-			train_con.speed_object[size1,size1]=new int[1];
-			train_con.speed_object[size1] = number;
+			train_con.speed_object[size1,size1]=new zxSpeedObject[1];
+			train_con.speed_object[size1] = entered_object;
 
 			// перевыставление скоростей
 
@@ -916,7 +916,7 @@ void TrainSpeedTriggerCleaner(Message msg)
 		int size1 = train_con.speed_object.size();
 		while(num1<0 and i<size1)
 			{
-			if(train_con.speed_object[i] == number)
+			if(train_con.speed_object[i] == entered_object)
 				num1 = i;
 			i++;
 			}
