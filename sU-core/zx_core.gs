@@ -2025,7 +2025,7 @@ public string  LibraryCall(string function, string[] stringParam, GSObject[] obj
 
 			if(temp_signal)
 				{
-				if(!temp_signal.Inited)
+				if(!temp_signal.Inited and GSTS.GetFacingRelativeToSearchDirection() == dirToFind)
 					return "";
 
 				if(!temp_signal.barrier_closed)
@@ -2130,7 +2130,7 @@ public string  LibraryCall(string function, string[] stringParam, GSObject[] obj
 
 			if(temp_signal)
 				{
-				if(!temp_signal.Inited)
+				if(!temp_signal.Inited and GSTS.GetFacingRelativeToSearchDirection() != dirToFind)
 					return "";
 
 				if(!temp_signal.barrier_closed)

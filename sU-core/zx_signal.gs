@@ -3742,6 +3742,7 @@ void OnMeshAttached(Message msg) {
 		for (i = 0; i < n; ++i) {
 			if (lens_kit[i] == msg.minor[1]) {
 				MC.LightMeshes[i] = GetFXAttachment(msg.minor);
+				MC.LightMeshes[i].SetMeshVisible("default", set_lens[i], 0.0);
 			}
 		}
 	}
@@ -3751,6 +3752,7 @@ void OnMeshAttached(Message msg) {
 		for (i = 0; i < n; ++i) {
 			if (lens_kit[i] == msg.minor[1]) {
 				MC.KozMeshes[i] = GetFXAttachment(msg.minor);
+				MC.KozMeshes[i].SetMeshVisible("default", set_lens[i], 0.0);
 				MC.kozirki[i] = true;
 			}
 		}
